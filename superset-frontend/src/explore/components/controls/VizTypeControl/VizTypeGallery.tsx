@@ -452,7 +452,7 @@ export default function VizTypeGallery(props: VizTypeGalleryProps) {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
-  }, []);
+  }, []); 
 
   const chartMetadata: VizEntry[] = useMemo(() => {
     const result = Object.entries(mountedPluginMetadata)
