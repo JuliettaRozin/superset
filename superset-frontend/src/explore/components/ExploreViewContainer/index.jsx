@@ -238,6 +238,8 @@ const defaultSidebarsWidth = {
   datasource_width: 300,
 };
 
+const originalDocumentTitle = document.title;
+
 function getSidebarWidths(key) {
   return getItem(key, defaultSidebarsWidth[key]);
 }
@@ -413,6 +415,18 @@ function ExploreViewContainer(props) {
       props.actions.triggerQuery(true, props.chart.id);
     }
   }, []);
+
+  // Manage browser tab title based on chart name
+  useEffect(() => {
+    if (props.sliceName) {
+      document.title = props.sliceName;
+    } else {
+      document.title = 'Superset';
+    }
+    return () => {
+      document.title = originalDocumentTitle;
+    };
+  }, [props.sliceName]);
 
   const reRenderChart = useCallback(
     controlsChanged => {
