@@ -49,16 +49,6 @@ const TagsList = ({
 }: TagsListProps) => {
   const [tempMaxTags, setTempMaxTags] = useState<number | undefined>(maxTags);
 
-  // Sort tags alphabetically (case-insensitive) using memoization
-  // This ensures consistent ordering across page reloads and different views
-  const sortedTags = useMemo(
-    () =>
-      [...tags].sort((a, b) =>
-        a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
-      ),
-    [tags],
-  );
-
   const handleDelete = (index: number) => {
     onDelete?.(index);
   };
@@ -68,21 +58,21 @@ const TagsList = ({
   const collapse = () => setTempMaxTags(maxTags);
 
   const tagsIsLong: boolean | null = useMemo(
-    () => (tempMaxTags ? sortedTags.length > tempMaxTags : null),
-    [sortedTags.length, tempMaxTags],
+    () => (tempMaxTags ? tags.length > tempMaxTags : null),
+    [tags.length, tempMaxTags],
   );
 
   const extraTags: number | null = useMemo(
     () =>
-      typeof tempMaxTags === 'number' ? sortedTags.length - tempMaxTags + 1 : null,
-    [tagsIsLong, sortedTags.length, tempMaxTags],
+      typeof tempMaxTags === 'number' ? tags.length - tempMaxTags + 1 : null,
+    [tagsIsLong, tags.length, tempMaxTags],
   );
 
   return (
     <TagsDiv className="tag-list">
       {tagsIsLong && typeof tempMaxTags === 'number' ? (
         <>
-          {sortedTags.slice(0, tempMaxTags - 1).map((tag: TagType, index) => (
+          {tags.slice(0, tempMaxTags - 1).map((tag: TagType, index) => (
             <Tag
               id={tag.id}
               key={tag.id}
@@ -92,17 +82,17 @@ const TagsList = ({
               editable={editable}
             />
           ))}
-          {sortedTags.length > tempMaxTags ? (
+          {tags.length > tempMaxTags ? (
             <Tag
               name={`+${extraTags}...`}
               onClick={expand}
-              toolTipTitle={sortedTags.map(t => t.name).join(', ')}
+              toolTipTitle={tags.map(t => t.name).join(', ')}
             />
           ) : null}
         </>
       ) : (
         <>
-          {sortedTags.map((tag: TagType, index) => (
+          {tags.map((tag: TagType, index) => (
             <Tag
               id={tag.id}
               key={tag.id}
@@ -113,7 +103,7 @@ const TagsList = ({
             />
           ))}
           {maxTags ? (
-            sortedTags.length > maxTags ? (
+            tags.length > maxTags ? (
               <Tag name="..." onClick={collapse} />
             ) : null
           ) : null}
