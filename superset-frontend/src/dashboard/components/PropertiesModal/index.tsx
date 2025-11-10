@@ -125,11 +125,7 @@ const PropertiesModal = ({
   const originalDashboardMetadata = useRef<Record<string, any>>({});
 
   const tagsAsSelectValues = useMemo(() => {
-    // Sort tags alphabetically (case-insensitive) before converting to select options
-    const sortedTags = [...tags].sort((a, b) =>
-      a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
-    );
-    const selectTags = sortedTags.map((tag: { id: number; name: string }) => ({
+    const selectTags = tags.map((tag: { id: number; name: string }) => ({
       value: tag.id,
       label: tag.name,
     }));
