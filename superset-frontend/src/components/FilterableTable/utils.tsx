@@ -17,7 +17,7 @@
  * under the License.
  */
 import { JsonModal, safeJsonObjectParse } from 'src/components/JsonModal';
-import { t, safeHtmlSpan } from '@superset-ui/core';
+import { t } from '@superset-ui/core';
 import { NULL_STRING, CellDataType } from './useCellContentParser';
 
 type CellParams = {
@@ -52,7 +52,10 @@ export const renderResultCell = ({
     );
   }
   if (allowHTML && typeof cellData === 'string') {
-    return safeHtmlSpan(cellNode);
+    // Render the string as plain text content. React automatically escapes HTML entities
+    // when rendering text, so strings like '<div>test</div>' will be safely displayed
+    // as text without being interpreted as HTML markup
+    return <span>{cellNode}</span>;
   }
   return cellNode;
 };

@@ -76,3 +76,23 @@ test('should transform cell data by getCellContent for the regular text', () => 
   );
   expect(container).toHaveTextContent('regular_text:a');
 });
+
+test('should render strings with angle brackets as text', () => {
+  const { container } = render(
+    <>
+      {renderResultCell({
+        cellData: '<div>test</div>',
+        columnKey: 'html_column',
+      })}
+    </>,
+  );
+  // Should display the angle brackets as text, not render as HTML
+  expect(container).toHaveTextContent('<div>test</div>');
+  // Should NOT have any div elements rendered (only the wrapper span)
+  // The container should only have one span element (our wrapper)
+  const spans = container.querySelectorAll('span');
+  expect(spans.length).toBe(1);
+  // Should NOT have any div elements from the cell content
+  const divs = container.querySelectorAll('div');
+  expect(divs.length).toBe(0);
+});
