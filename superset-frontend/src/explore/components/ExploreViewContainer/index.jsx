@@ -238,8 +238,6 @@ const defaultSidebarsWidth = {
   datasource_width: 300,
 };
 
-const originalDocumentTitle = document.title;
-
 function getSidebarWidths(key) {
   return getItem(key, defaultSidebarsWidth[key]);
 }
@@ -420,11 +418,9 @@ function ExploreViewContainer(props) {
   useEffect(() => {
     if (props.sliceName) {
       document.title = props.sliceName;
-    } else {
-      document.title = 'Superset';
-    }
+    } 
     return () => {
-      document.title = originalDocumentTitle;
+      document.title = 'Superset';  // Reset to default superset title
     };
   }, [props.sliceName]);
 
