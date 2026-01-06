@@ -328,6 +328,38 @@ const config: ControlPanelConfig = {
         ],
         [
           {
+            name: 'order_desc',
+            config: {
+              type: 'CheckboxControl',
+              label: t('Sort descending'),
+              default: true,
+              description: t(
+                'If enabled, this control sorts the results/values descending, otherwise it sorts the results ascending.',
+              ),
+              visibility: ({ controls }: ControlPanelsContainerProps) => {
+                const queryMode = getQueryMode(controls);
+                // In aggregation mode, check if timeseries_limit_metric has a value
+                if (queryMode === QueryMode.Aggregate) {
+                  return Boolean(
+                    controls?.timeseries_limit_metric?.value &&
+                    !isEmpty(controls?.timeseries_limit_metric?.value)
+                  );
+                }
+                // In raw mode, check if order_by_cols has values
+                if (queryMode === QueryMode.Raw) {
+                  return Boolean(
+                    controls?.order_by_cols?.value &&
+                    ensureIsArray(controls?.order_by_cols?.value).length > 0
+                  );
+                }
+                return false;
+              },
+              resetOnHide: false,
+            },
+          },
+        ],
+        [
+          {
             name: 'server_pagination',
             config: {
               type: 'CheckboxControl',
@@ -359,21 +391,6 @@ const config: ControlPanelConfig = {
               description: t('Rows per page, 0 means no pagination'),
               visibility: ({ controls }: ControlPanelsContainerProps) =>
                 Boolean(controls?.server_pagination?.value),
-            },
-          },
-        ],
-        [
-          {
-            name: 'order_desc',
-            config: {
-              type: 'CheckboxControl',
-              label: t('Sort descending'),
-              default: true,
-              description: t(
-                'If enabled, this control sorts the results/values descending, otherwise it sorts the results ascending.',
-              ),
-              visibility: isAggMode,
-              resetOnHide: false,
             },
           },
         ],
