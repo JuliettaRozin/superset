@@ -414,6 +414,16 @@ function ExploreViewContainer(props) {
     }
   }, []);
 
+  // Manage browser tab title based on chart name
+  useEffect(() => {
+    if (props.sliceName) {
+      document.title = props.sliceName;
+    } 
+    return () => {
+      document.title = 'Superset';  // Reset to default superset title
+    };
+  }, [props.sliceName]);
+
   const reRenderChart = useCallback(
     controlsChanged => {
       const newQueryFormData = controlsChanged

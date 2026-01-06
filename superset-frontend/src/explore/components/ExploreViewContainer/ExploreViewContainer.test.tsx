@@ -299,3 +299,58 @@ test('does omit hiddenFormData when query_mode is not enabled', async () => {
     expect(formData[key]).toBeUndefined();
   });
 });
+
+test('updates document title when sliceName is provided', async () => {
+  const originalTitle = document.title;
+  const customState = {
+    ...reduxState,
+    explore: {
+      ...reduxState.explore,
+      sliceName: 'Test Chart Name',
+    },
+  };
+
+  await waitFor(() => renderWithRouter({ initialState: customState }));
+  
+  expect(document.title).toBe('Test Chart Name');
+  
+  // Cleanup
+  document.title = originalTitle;
+});
+
+test('sets document title to Superset when sliceName is null', async () => {
+  const originalTitle = document.title;
+  const customState = {
+    ...reduxState,
+    explore: {
+      ...reduxState.explore,
+      sliceName: null,
+    },
+  };
+
+  await waitFor(() => renderWithRouter({ initialState: customState }));
+  
+  expect(document.title).toBe('Superset');
+  
+  // Cleanup
+  document.title = originalTitle;
+});
+
+test('resets document title when component unmounts', async () => {
+  const originalTitle = document.title;
+  const customState = {
+    ...reduxState,
+    explore: {
+      ...reduxState.explore,
+      sliceName: 'Test Chart Name',
+    },
+  };
+
+  const { unmount } = renderWithRouter({ initialState: customState });
+  
+  expect(document.title).toBe('Test Chart Name');
+  
+  unmount();
+  
+  expect(document.title).toBe(originalTitle);
+});
